@@ -3,7 +3,7 @@ import { branch } from './branch.js';
 import { makePlant } from './make-plant.js';
 
 
-export const grow = () => {
+export const grow = ({ musicData }) => {
   p.translate(p.width / 2, p.height);
 	p.scale(1, -1);
 	p.translate(0, 20);
