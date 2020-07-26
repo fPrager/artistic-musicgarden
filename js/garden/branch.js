@@ -35,7 +35,6 @@ function parse(path) {
 }
 
 const scalePath = function(segments, sx, sy) {
-  console.log(segments);
   sy = (!sy && (sy !== 0)) ? sx : sy
 
   return segments.map(function(segment) {

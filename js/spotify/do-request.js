@@ -6,8 +6,7 @@ const getRefreshTokenRoute = '/get-refresh-token';
 const refreshRoute = '/refresh';
 
 const hash = 
-    window.location.search
-    .substring(1)
+    (window.location.search.substring(1) || window.location.hash.substring(1))
     .split('&')
     .reduce(function (initial, item) {
       if (item) {
@@ -36,7 +35,7 @@ if( !token && !code && !refresh_token ) {
   window.location = url;
 }
 
-export const doRequest = async (url) => {
+export const doRequest = async (url) => {  
   if(!token && !code && !refresh_token) return false;
 
   if( !token && code ) {
