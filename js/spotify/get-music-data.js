@@ -2,9 +2,9 @@ import { doRequest } from './do-request.js';
 
 export const getMusicData = async (token) => {
   const limits = {
-    longTerm: 5,
+    longTerm: 1,
     mediumTerm: 10,
-    shortTerm: 20,
+    shortTerm: 50,
   };
 
   // fetch all-time top 20 artist (long_term) <-- big trees labeled
@@ -14,7 +14,7 @@ export const getMusicData = async (token) => {
   }
 
   const topLongTerm = topLongTermResponse.items
-    .map(( i ) => ({ name: i.name, genre: i.genres[0] }))
+    .map(( i ) => ({ name: i.name, genre: i.genres[0], category: 'long_term' }))
     .filter(( i ) => !!i.genre); // some sound track artist have no genre in spotify, e.g.: "Andy Hull and Robert McDowell" (Swiss Army Man OST)
 
   const topLongTermNames = topLongTerm.map(( i ) => i.name);
@@ -26,7 +26,7 @@ export const getMusicData = async (token) => {
   }
 
   const topMediumTerm = topMediumTermResponse.items
-    .map(( i ) => ({ name: i.name, genre: i.genres[0] }))
+    .map(( i ) => ({ name: i.name, genre: i.genres[0], category: 'medium_term' }))
     .filter(( i ) => !!i.genre )
     .filter(( i ) => !topLongTermNames.includes( i.name ));
 
@@ -39,27 +39,26 @@ export const getMusicData = async (token) => {
   }
 
   const topShortTerm = topShortTermResponse.items
-    .map(( i ) => ({ name: i.name, genre: i.genres[0] }))
+    .map(( i ) => ({ name: i.name, genre: i.genres[0], category: 'short_term' }))
     .filter(( i ) => !!i.genre )
     .filter(( i ) => (!topLongTermNames.includes( i.name ) && !topMediumTermNames.includes( i.name )));
+
+  const favArtists = [ ...topLongTerm, ...topMediumTerm, ...topShortTerm ];
 
   // fetch genre of each artist and map with every noise (bottom organic, top electronic, left atmospheric, right bouncier) <-- horizontal position, branching angles, flower types
   // [atmospheric = left, bouncier = right, organic = round angles, electronic = symmetric angles]
   var genreMap = await (await fetch('assets/genreMap.json')).json();
-  [
-    ...topLongTerm,
-    ...topMediumTerm,
-    ...topShortTerm,
-  ].map(( artist ) => {
-    if( !genreMap[ artist.genre ] ) {
-      console.warn('genre ', artist.genre, ' of artist ', artist.name, ' is missing in genre map!');
-    }
-    artist.electric = ( genreMap[ artist.genre ] || {} ).electric || 0;
-    artist.atmospheric = ( genreMap[ artist.genre ] || {} ).atmospheric || 0;
-  });
+  favArtists
+    .map(( artist ) => {
+      if( !genreMap[ artist.genre ] ) {
+        console.warn('genre ', artist.genre, ' of artist ', artist.name, ' is missing in genre map!');
+      }
+      artist.electric = ( genreMap[ artist.genre ] || {} ).electric || 0;
+      artist.atmospheric = ( genreMap[ artist.genre ] || {} ).atmospheric || 0;
+    });
 
   // get top genre
-  const genreCounter = [ ...topLongTerm, ...topMediumTerm, ...topShortTerm ]
+  const genreCounter = favArtists
     .map(( artist )  => artist.genre )
     .reduce(( counter, genre ) => ({ ...counter, [genre]: (( counter[genre] || 0 ) + 1 )}), {});
   const topGenre = (Object.keys(genreCounter))
@@ -67,19 +66,26 @@ export const getMusicData = async (token) => {
     .sort(( g1, g2 ) => ( g1.count > g2.count ))
     [0].name;
 
-  console.log(topGenre)
+  // fetch recently played tracks (max 50)  <-- branch and flower probability of tree
+  const recentlyPlayedTracksResonse = await doRequest('https://api.spotify.com/v1/me/player/recently-played?limit=50');
+  const recentTracks = recentlyPlayedTracksResonse.items.map(
+    (item) => (
+        {
+          artist: item.track.artists[0].name,
+          when: new Date(item.played_at),
+          name: item.track.name,
+        }
+  ));
+  
 
   const musicData = {
-    topLongTerm,
-    topMediumTerm,
-    topShortTerm,
+    recentTracks,
+    favArtists,
     genreCounter,
     topGenre,
   };
   
 
-
-  // fetch 50 songs in last 4 weeks (short_term) <-- branch and flower probability of tree
   // no songs: 0.3 branches, 0 flowers
   // one song: 0.5 branches
 

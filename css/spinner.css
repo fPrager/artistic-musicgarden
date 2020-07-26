@@ -1,0 +1,29 @@
+#spinner {
+  position: absolute;
+  z-index: 1;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  left: calc(50% - 10px);
+  top: calc(50% - 10px);
+}
+
+#spinner:after {
+  content: " ";
+  display: block;
+  width: 15px;
+  height: 15px;
+  margin: 5px;
+  border-radius: 50%;
+  border: 3px solid rgb(220, 220, 220);
+  border-color: rgb(220, 220, 220) transparent rgb(220, 220, 220) transparent;
+  animation: spinner 5.2s linear infinite;
+}
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
