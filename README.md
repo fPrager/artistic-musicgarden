@@ -1,9 +1,9 @@
 # artistic-musicgarden
-artist to visualize your music interests using Spotify API
+webpage to visualize your music interests using Spotify API
 
-<a href="https://artistic-musicgarden--fprager.repl.co/?implicit=true" target="_blank">See your Music Garden on Repl.it...</a>
+![Sample Image](https://artistic-musicgarden--fprager.repl.co/canvas.png)
 
-[![See your Music Garden on Repl.it](https://artistic-musicgarden--fprager.repl.co/?implicit=true)](https://repl.it/github/fPrager/artistic-musicgarden)
+[See your Music Garden on Repl.it...](https://artistic-musicgarden--fprager.repl.co/?implicit=true)
 
 ## how to get your garden picture
 
@@ -28,7 +28,7 @@ If you want to have a permanent url to your music garden, the artisit-musicgarde
 Read more about this [authorization code workflow](https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow).
 
 To use this method:
-- visit the repl with the normal url
+- visit the repl with the [normal url](https://artistic-musicgarden--fprager.repl.co/)
 - login to you Spotify account
 - click yes and wait until the Garden Picture is generated
 - use the url (containing a __refresh_token__ in your browser to rerender a picture later (without the need to relogin) 
