@@ -1,6 +1,8 @@
 # artistic-musicgarden
 artist to visualize your music interests using Spotify API
 
+<a href="https://artistic-musicgarden--fprager.repl.co/?implicit=true" target="_blank">See your Music Garden on Repl.it...</a>
+
 [![See your Music Garden on Repl.it](https://artistic-musicgarden--fprager.repl.co/?implicit=true)](https://repl.it/github/fPrager/artistic-musicgarden)
 
 ## how to get your garden picture
